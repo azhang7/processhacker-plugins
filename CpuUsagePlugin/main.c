@@ -56,8 +56,7 @@ VOID TreeNewMessageCallback(_In_opt_ PVOID Parameter, _In_opt_ PVOID Context)
         if (PhFormatToBuffer(&format, 1, buffer, PH_INT32_STR_LEN_1 * sizeof(WCHAR),
                              &returnLength)) {
             getCellText->Text.Buffer = buffer;
-            getCellText->Text.Length =
-                (USHORT)(returnLength - sizeof(WCHAR)); // minus null terminator
+            getCellText->Text.Length = (USHORT)(returnLength - sizeof(WCHAR)); // minus null terminator
         }
     } else if (cpuUsage != 0 && PhGetIntegerSetting(L"ShowCpuBelow001")) {
         PhInitializeStringRef(&getCellText->Text, L"< 0.01");
@@ -70,10 +69,12 @@ LONG NTAPI CpuSortFunction(_In_ PVOID Node1, _In_ PVOID Node2,
 {
     PPH_PROCESS_NODE node1 = Node1;
     PPH_PROCESS_NODE node2 = Node2;
-    PPROCESS_EXTENSION extension1 = PhPluginGetObjectExtension(
-        PluginInstance, node1->ProcessItem, EmProcessItemType);
-    PPROCESS_EXTENSION extension2 = PhPluginGetObjectExtension(
-        PluginInstance, node2->ProcessItem, EmProcessItemType);
+    PPROCESS_EXTENSION extension1 = PhPluginGetObjectExtension(PluginInstance,
+                                                               node1->ProcessItem,
+                                                               EmProcessItemType);
+    PPROCESS_EXTENSION extension2 = PhPluginGetObjectExtension(PluginInstance,
+                                                               node2->ProcessItem,
+                                                               EmProcessItemType);
 
     return singlecmp(extension1->CpuUsage, extension2->CpuUsage);
 }
@@ -108,8 +109,8 @@ VOID ProcessItemCreateCallback(_In_ PVOID Object,
 VOID ProcessAddedHandler(_In_opt_ PVOID Parameter, _In_opt_ PVOID Context)
 {
     PPH_PROCESS_ITEM processItem = Parameter;
-    PPROCESS_EXTENSION extension = PhPluginGetObjectExtension(
-        PluginInstance, processItem, EmProcessItemType);
+    PPROCESS_EXTENSION extension = PhPluginGetObjectExtension(PluginInstance, processItem,
+                                                              EmProcessItemType);
 
     InsertTailList(&ProcessListHead, &extension->ListEntry);
 }
@@ -117,15 +118,14 @@ VOID ProcessAddedHandler(_In_opt_ PVOID Parameter, _In_opt_ PVOID Context)
 VOID ProcessRemovedHandler(_In_opt_ PVOID Parameter, _In_opt_ PVOID Context)
 {
     PPH_PROCESS_ITEM processItem = Parameter;
-    PPROCESS_EXTENSION extension = PhPluginGetObjectExtension(
-        PluginInstance, processItem, EmProcessItemType);
+    PPROCESS_EXTENSION extension = PhPluginGetObjectExtension(PluginInstance, processItem,
+                                                              EmProcessItemType);
 
     RemoveEntryList(&extension->ListEntry);
 }
 
 VOID ProcessesUpdatedHandler(_In_opt_ PVOID Parameter, _In_opt_ PVOID Context)
 {
-
     PLIST_ENTRY listEntry;
 
     listEntry = ProcessListHead.Flink;
